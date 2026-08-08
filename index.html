@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>1000 Words · Flashcards</title>
+    <title>1000 Words · Flashcards + Grammar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,9 +11,28 @@
     <div id="dashboard" class="screen active">
         <div class="container">
             <header>
-                <h1>📚 1000 Words</h1>
+                <h1>📚 1000 Words+</h1>
                 <span class="level-badge" id="levelBadge">Nível A</span>
             </header>
+
+            <!-- Configurações rápidas -->
+            <div class="config-panel">
+                <div class="config-group">
+                    <span class="config-label">Resposta:</span>
+                    <div class="btn-group" id="modeToggle">
+                        <button class="config-btn active" data-mode="click">Clique</button>
+                        <button class="config-btn" data-mode="type">Digitação</button>
+                    </div>
+                </div>
+                <div class="config-group">
+                    <span class="config-label">Conteúdo:</span>
+                    <div class="btn-group" id="contentToggle">
+                        <button class="config-btn active" data-content="vocabulary">Vocabulário</button>
+                        <button class="config-btn" data-content="cloze">Contexto</button>
+                        <button class="config-btn" data-content="mixed">Misto</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="score-grid">
                 <div class="score-item">
@@ -58,14 +77,17 @@
 
             <div class="flashcard" id="flashcard">
                 <div class="word-display" id="wordDisplay">hello</div>
-                <div class="options-grid" id="optionsContainer">
-                    <!-- Botões gerados pelo JS -->
+                <!-- Área para múltipla escolha -->
+                <div class="options-grid" id="optionsContainer"></div>
+                <!-- Área para digitação -->
+                <div class="type-area" id="typeArea" style="display: none;">
+                    <input type="text" id="typeInput" placeholder="Digite a resposta..." autocomplete="off">
+                    <button class="btn-primary btn-small" id="typeSubmit">Confirmar</button>
                 </div>
-            </div>
-
-            <div class="feedback-overlay" id="feedbackOverlay">
-                <span id="feedbackIcon">✅</span>
-                <span id="feedbackText">Correto!</span>
+                <div class="feedback-overlay" id="feedbackOverlay">
+                    <span id="feedbackIcon">✅</span>
+                    <span id="feedbackText">Correto!</span>
+                </div>
             </div>
 
             <button class="btn-secondary btn-small" id="quitSessionBtn">✕ Sair e voltar</button>
