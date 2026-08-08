@@ -134,10 +134,10 @@ const TOTAL_LEVELS = 10;
 const CARDS_PER_SESSION = 12;
 const DOMINATION_THRESHOLD = 4;
 const UNLOCK_THRESHOLD = 0.8;
-const MIX_RATIO = 3; // a cada 3 vocabulários, 1 contexto
+const MIX_RATIO = 3;
 
-let currentMode = 'click';   // 'click' ou 'type'
-let currentContent = 'vocabulary'; // 'vocabulary', 'cloze', 'mixed'
+let currentMode = 'click';
+let currentContent = 'vocabulary';
 
 // ============================================================
 // 3. ESTADO
@@ -265,7 +265,6 @@ function selectCardsForSession(state) {
     const cloze = getClozeQuestions();
     const now = Date.now();
 
-    // Palavras
     const wordPriority = [], wordNew = [], wordStable = [];
     words.forEach(w => {
         const prog = getItemProgress(state, w.index);
@@ -275,7 +274,6 @@ function selectCardsForSession(state) {
     });
     shuffle(wordPriority); shuffle(wordNew); shuffle(wordStable);
 
-    // Frases
     const clozePriority = [], clozeNew = [], clozeStable = [];
     cloze.forEach(c => {
         const prog = getItemProgress(state, c.index);
@@ -292,7 +290,7 @@ function selectCardsForSession(state) {
         selected = buildSelection(wordPriority, wordNew, wordStable, totalSlots);
     } else if (currentContent === 'cloze') {
         selected = buildSelection(clozePriority, clozeNew, clozeStable, totalSlots);
-    } else { // mixed
+    } else {
         const vocabSlots = Math.min(Math.round(totalSlots * MIX_RATIO / (MIX_RATIO + 1)), totalSlots);
         const clozeSlots = totalSlots - vocabSlots;
         const vocabPart = buildSelection(wordPriority, wordNew, wordStable, vocabSlots);
@@ -316,7 +314,6 @@ let timerInterval = null;
 let isAnswering = false;
 let currentCardType = 'word';
 
-// Aplicar configurações salvas
 if (state.config) {
     currentMode = state.config.mode || 'click';
     currentContent = state.config.content || 'vocabulary';
@@ -365,7 +362,6 @@ function renderDashboard() {
         document.getElementById('sessionRate').textContent = '--';
     }
 
-    // Atualizar botões de configuração
     document.querySelectorAll('#modeToggle .config-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === currentMode);
     });
@@ -411,15 +407,8 @@ function renderCard() {
     currentCardType = card.type || 'word';
     document.getElementById('cardCounter').textContent = `Card ${sessionIndex + 1} / ${currentSession.length}`;
     document.getElementById('feedbackOverlay').classList.remove('show');
+    document.getElementById('wordDisplay').textContent = card.en;
 
-    // Exibir o texto (palavra ou frase)
-    if (currentCardType === 'word') {
-        document.getElementById('wordDisplay').textContent = card.en;
-    } else { // cloze
-        document.getElementById('wordDisplay').textContent = card.en;
-    }
-
-    // Mostrar/esconder áreas conforme modo
     const isTypeMode = (currentMode === 'type');
     document.getElementById('optionsContainer').style.display = isTypeMode ? 'none' : 'flex';
     document.getElementById('typeArea').style.display = isTypeMode ? 'flex' : 'none';
@@ -430,29 +419,41 @@ function renderCard() {
         input.disabled = false;
         input.focus();
         document.getElementById('typeSubmit').disabled = false;
-        // Remove listeners antigos para evitar duplicação
         const newSubmit = document.getElementById('typeSubmit').cloneNode(true);
         document.getElementById('typeSubmit').replaceWith(newSubmit);
         newSubmit.addEventListener('click', () => handleTypeAnswer());
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') handleTypeAnswer();
         });
-        // Armazena a resposta correta no botão para uso
         newSubmit.dataset.answer = card.answer || card.pt;
         newSubmit.dataset.cardIndex = sessionIndex;
-        // Remove event listener antigo do input
-        input.removeEventListener('keydown', handleTypeAnswer);
     } else {
         // Modo clique: gerar opções
-        const correctPt = card.pt || card.answer;
-        let options = [correctPt];
-        const pool = WORDS.filter(w => w.pt !== correctPt && w.en !== card.en);
-        shuffle(pool);
-        for (let i = 0; i < 3 && i < pool.length; i++) {
-            options.push(pool[i].pt);
+        const isCloze = (card.type === 'cloze');
+        const correctAnswer = card.answer || card.pt; // para cloze é a palavra em inglês, para vocabulário é a tradução em pt
+        let options = [correctAnswer];
+        let pool;
+
+        if (isCloze) {
+            // Distratores em inglês (para contexto)
+            pool = WORDS.filter(w => w.en !== correctAnswer && w.en !== card.en);
+            shuffle(pool);
+            for (let i = 0; i < 3 && i < pool.length; i++) {
+                options.push(pool[i].en);
+            }
+        } else {
+            // Distratores em português (para vocabulário)
+            pool = WORDS.filter(w => w.pt !== correctAnswer && w.en !== card.en);
+            shuffle(pool);
+            for (let i = 0; i < 3 && i < pool.length; i++) {
+                options.push(pool[i].pt);
+            }
         }
+
+        // Garantir que não haja duplicatas
+        options = [...new Set(options)];
         while (options.length < 4) {
-            options.push('---');
+            options.push(isCloze ? '---' : '---');
         }
         shuffle(options);
 
@@ -462,14 +463,14 @@ function renderCard() {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.textContent = opt;
-            btn.dataset.correct = (opt === correctPt) ? 'true' : 'false';
-            btn.addEventListener('click', () => handleClickAnswer(btn, correctPt));
+            btn.dataset.correct = (opt === correctAnswer) ? 'true' : 'false';
+            btn.addEventListener('click', () => handleClickAnswer(btn, correctAnswer));
             container.appendChild(btn);
         });
     }
 }
 
-function handleClickAnswer(clickedBtn, correctPt) {
+function handleClickAnswer(clickedBtn, correctAnswer) {
     if (isAnswering) return;
     isAnswering = true;
 
@@ -533,7 +534,6 @@ function handleTypeAnswer() {
         sessionWrong++;
         updateItemProgress(state, card.index, 0);
         showFeedback(false);
-        // Mostra a resposta correta no campo
         input.value = correctAnswer;
         input.style.borderColor = '#EF4444';
         setTimeout(() => { input.style.borderColor = ''; }, 1200);
@@ -582,7 +582,7 @@ function showScreen(screenId) {
 }
 
 // ============================================================
-// 7. CONFIGURAÇÕES (eventos dos botões)
+// 7. CONFIGURAÇÕES
 // ============================================================
 document.querySelectorAll('#modeToggle .config-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -605,7 +605,7 @@ document.querySelectorAll('#contentToggle .config-btn').forEach(btn => {
 });
 
 // ============================================================
-// 8. EVENTOS PRINCIPAIS
+// 8. EVENTOS
 // ============================================================
 document.getElementById('startSessionBtn').addEventListener('click', startSession);
 document.getElementById('quitSessionBtn').addEventListener('click', () => {
@@ -615,5 +615,4 @@ document.getElementById('quitSessionBtn').addEventListener('click', () => {
 });
 document.getElementById('endGoDashboardBtn').addEventListener('click', renderDashboard);
 
-// Inicializa
 renderDashboard();
