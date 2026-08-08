@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>1000 Words · Flashcards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="screen active">
+        <div class="container">
+            <header>
+                <h1>📚 1000 Words</h1>
+                <span class="level-badge" id="levelBadge">Nível A</span>
+            </header>
+
+            <div class="score-grid">
+                <div class="score-item">
+                    <span class="score-label">Dominadas</span>
+                    <span class="score-value" id="dominatedCount">0 / 100</span>
+                </div>
+                <div class="score-item">
+                    <span class="score-label">Taxa sessão</span>
+                    <span class="score-value" id="sessionRate">--</span>
+                </div>
+            </div>
+
+            <div class="progress-area">
+                <div class="progress-label">
+                    <span>Progresso do nível</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="progressFill" style="width: 0%;"></div>
+                    <div class="progress-marker" style="left: 80%;">🎯 80%</div>
+                </div>
+                <div class="level-status" id="levelStatus">
+                    🔒 Próximo nível bloqueado (atinga 80%)
+                </div>
+            </div>
+
+            <button class="btn-primary btn-large" id="startSessionBtn">▶ Iniciar Sessão (12 cards)</button>
+            
+            <div class="history-mini">
+                <span>Última sessão: <span id="lastSessionInfo">Nenhuma ainda</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SESSÃO DE FLASHCARDS -->
+    <div id="session" class="screen">
+        <div class="container">
+            <div class="session-header">
+                <span id="cardCounter">Card 1 / 12</span>
+                <span id="sessionTimer">⏱️ 0s</span>
+            </div>
+
+            <div class="flashcard" id="flashcard">
+                <div class="word-display" id="wordDisplay">hello</div>
+                <div class="options-grid" id="optionsContainer">
+                    <!-- Botões gerados pelo JS -->
+                </div>
+            </div>
+
+            <div class="feedback-overlay" id="feedbackOverlay">
+                <span id="feedbackIcon">✅</span>
+                <span id="feedbackText">Correto!</span>
+            </div>
+
+            <button class="btn-secondary btn-small" id="quitSessionBtn">✕ Sair e voltar</button>
+        </div>
+    </div>
+
+    <!-- RESUMO PÓS-SESSÃO -->
+    <div id="sessionEnd" class="screen">
+        <div class="container end-container">
+            <div class="end-icon" id="endIcon">🏆</div>
+            <h2 id="endTitle">Sessão concluída!</h2>
+            <div class="end-stats">
+                <div class="end-stat"><span>Acertos</span> <strong id="endCorrect">0</strong></div>
+                <div class="end-stat"><span>Erros</span> <strong id="endWrong">0</strong></div>
+                <div class="end-stat"><span>Pontuação</span> <strong id="endScore">0%</strong></div>
+            </div>
+            <button class="btn-primary btn-large" id="endGoDashboardBtn">📊 Ver Dashboard</button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
