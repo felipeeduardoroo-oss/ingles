@@ -435,6 +435,9 @@ function showScreen(screenId) {
 // ============================================================
 // 6. EVENTOS E INICIALIZAÇÃO
 // ============================================================
+// ============================================================
+// 6. EVENTOS E INICIALIZAÇÃO
+// ============================================================
 document.getElementById('startSessionBtn').addEventListener('click', startSession);
 document.getElementById('quitSessionBtn').addEventListener('click', () => {
     clearInterval(timerInterval);
@@ -443,5 +446,7 @@ document.getElementById('quitSessionBtn').addEventListener('click', () => {
 });
 document.getElementById('endGoDashboardBtn').addEventListener('click', renderDashboard);
 
+// INICIALIZA A APLICAÇÃO (é essa linha que estava faltando)
+renderDashboard();
 // Inicializa
 renderDashboard();
