@@ -1,9 +1,8 @@
 // ============================================================
-// 1. DADOS: VOCABULÁRIO (1000 palavras)
+// 1. DADOS COMPLETOS
 // ============================================================
-// OBS: A função generatePhonetic será definida depois.
-// Para as palavras, adicionamos um campo phonetic que será preenchido dinamicamente
-// ou manualmente para as irregulares. Para simplificar, usamos uma função.
+
+// --- 1000 PALAVRAS MAIS FREQUENTES (Nível A a J) ---
 const WORDS = [
     // Nível A (0-99)
     { en: "the", pt: "o, a, os, as" }, { en: "be", pt: "ser, estar" }, { en: "to", pt: "para, ir" }, { en: "of", pt: "de" }, { en: "and", pt: "e" }, { en: "a", pt: "um, uma" }, { en: "in", pt: "em, dentro" }, { en: "that", pt: "que, aquele" }, { en: "have", pt: "ter" }, { en: "i", pt: "eu" },
@@ -74,9 +73,7 @@ const WORDS = [
     { en: "belong", pt: "pertencer" }, { en: "contain", pt: "conter" }, { en: "represent", pt: "representar" }, { en: "consult", pt: "consultar" }, { en: "publish", pt: "publicar" }, { en: "broadcast", pt: "transmitir (TV/rádio)" }, { en: "celebrate", pt: "celebrar" }, { en: "commemorate", pt: "comemorar" }, { en: "memorize", pt: "memorizar" }, { en: "practice", pt: "praticar" }
 ];
 
-// ============================================================
-// 1B. BANCO DE FRASES CONTEXTUAIS (CLOZE) com Tradução PT
-// ============================================================
+// --- 50 FRASES CLOZE (com tradução em português) ---
 const CLOZE_SENTENCES = [
     { en: "I _______ to the store yesterday.", pt: "Eu fui à loja ontem.", answer: "went" },
     { en: "She _______ a new car last week.", pt: "Ela comprou um carro novo na semana passada.", answer: "bought" },
@@ -130,9 +127,7 @@ const CLOZE_SENTENCES = [
     { en: "We _______ a great time at the party.", pt: "Nós nos divertimos muito na festa.", answer: "had" }
 ];
 
-// ============================================================
-// 1C. BANCO DE GRAMÁTICA (com Justificativa)
-// ============================================================
+// --- 20 QUESTÕES DE GRAMÁTICA (com justificativa) ---
 const GRAMMAR_QUESTIONS = [
     { 
         en: "Qual dessas frases usa corretamente a preposição 'at'?",
@@ -256,11 +251,44 @@ const GRAMMAR_QUESTIONS = [
     }
 ];
 
+// --- 30 FRASES PARA "MONTE A FRASE" (SCRAMBLE) ---
+const SCRAMBLE_SENTENCES = [
+    { en: "I am going to the store.", words: ["I", "am", "going", "to", "the", "store."] },
+    { en: "She is a great teacher.", words: ["She", "is", "a", "great", "teacher."] },
+    { en: "They are playing soccer.", words: ["They", "are", "playing", "soccer."] },
+    { en: "We have a big house.", words: ["We", "have", "a", "big", "house."] },
+    { en: "He likes to read books.", words: ["He", "likes", "to", "read", "books."] },
+    { en: "I need to study more.", words: ["I", "need", "to", "study", "more."] },
+    { en: "She can speak three languages.", words: ["She", "can", "speak", "three", "languages."] },
+    { en: "They will travel next year.", words: ["They", "will", "travel", "next", "year."] },
+    { en: "We are cooking dinner now.", words: ["We", "are", "cooking", "dinner", "now."] },
+    { en: "He works at a hospital.", words: ["He", "works", "at", "a", "hospital."] },
+    { en: "I bought a new car.", words: ["I", "bought", "a", "new", "car."] },
+    { en: "She loves to dance.", words: ["She", "loves", "to", "dance."] },
+    { en: "They live in London.", words: ["They", "live", "in", "London."] },
+    { en: "We watched a movie.", words: ["We", "watched", "a", "movie."] },
+    { en: "He writes poems.", words: ["He", "writes", "poems."] },
+    { en: "I have a dog and a cat.", words: ["I", "have", "a", "dog", "and", "a", "cat."] },
+    { en: "She is my best friend.", words: ["She", "is", "my", "best", "friend."] },
+    { en: "They are from Brazil.", words: ["They", "are", "from", "Brazil."] },
+    { en: "We need to leave now.", words: ["We", "need", "to", "leave", "now."] },
+    { en: "He goes to school by bus.", words: ["He", "goes", "to", "school", "by", "bus."] },
+    { en: "I like to play the guitar.", words: ["I", "like", "to", "play", "the", "guitar."] },
+    { en: "She drinks coffee every morning.", words: ["She", "drinks", "coffee", "every", "morning."] },
+    { en: "They built a new house.", words: ["They", "built", "a", "new", "house."] },
+    { en: "We are learning English.", words: ["We", "are", "learning", "English."] },
+    { en: "He broke his phone.", words: ["He", "broke", "his", "phone."] },
+    { en: "I will call you later.", words: ["I", "will", "call", "you", "later."] },
+    { en: "She found her keys.", words: ["She", "found", "her", "keys."] },
+    { en: "They are happy together.", words: ["They", "are", "happy", "together."] },
+    { en: "We ate pizza for dinner.", words: ["We", "ate", "pizza", "for", "dinner."] },
+    { en: "He runs every day.", words: ["He", "runs", "every", "day."] }
+];
+
 // ============================================================
 // 2. GERADOR DE FONÉTICA (Português Brasil - Simplificado)
 // ============================================================
 function generateBrazilianPhonetic(text) {
-    // Dicionário de exceções manuais para palavras muito irregulares
     const exceptions = {
         "the": "dâ", "be": "bí", "to": "tú", "of": "óv", "and": "ând", "a": "éi",
         "in": "ín", "that": "dát", "have": "ráv", "i": "ái", "it": "ít", "for": "fór",
@@ -395,43 +423,41 @@ function generateBrazilianPhonetic(text) {
         "practice": "práktis"
     };
 
-    // Verifica se a palavra tem exceção
     const lowerText = text.toLowerCase().trim();
     if (exceptions[lowerText]) return exceptions[lowerText];
 
-    // Regras gerais simplificadas (fallback)
     let phon = text
         .toLowerCase()
-        .replace(/th/g, 'd')      // 'the' -> 'dâ' (mas já tratamos), em geral 'th' vira 'd' ou 't'
-        .replace(/oo/g, 'u')       // book -> buk
-        .replace(/ee/g, 'i')       // see -> si
-        .replace(/ea/g, 'i')       // meat -> mit
-        .replace(/ai/g, 'êi')      // rain -> rêin
-        .replace(/ay/g, 'êi')      // day -> dêi
-        .replace(/ou/g, 'ôu')      // out -> out
-        .replace(/ow/g, 'ôu')      // how -> hôu
-        .replace(/igh/g, 'ái')     // night -> náit
-        .replace(/are/g, 'ér')     // care -> kér
-        .replace(/ere/g, 'ír')     // here -> rír
-        .replace(/tion/g, 'xen')   // nation -> neixen
-        .replace(/sion/g, 'zen')   // version -> vérzen
-        .replace(/ch/g, 'tch')     // church -> tchertch
-        .replace(/sh/g, 'x')       // she -> xi
-        .replace(/ph/g, 'f')       // phone -> fone
-        .replace(/gh/g, '')        // through -> tru
-        .replace(/ck/g, 'k')       // back -> bek
-        .replace(/ng/g, 'n')       // thing -> tin
-        .replace(/qu/g, 'ku')      // queen -> kuín
-        .replace(/x/g, 'ks')       // fix -> fiks
-        .replace(/c([ei])/g, 's$1') // city -> sity
-        .replace(/g([ei])/g, 'dj$1') // gel -> djel
-        .replace(/a/g, 'é')        // padrão
-        .replace(/e/g, 'i')        // me -> mi
-        .replace(/i/g, 'í')        // in -> ín
-        .replace(/o/g, 'ô')        // go -> gô
-        .replace(/u/g, 'ú')        // up -> úp
-        .replace(/r/g, 'r')        // mantém
-        .replace(/l/g, 'l')        // mantém
+        .replace(/th/g, 'd')
+        .replace(/oo/g, 'u')
+        .replace(/ee/g, 'i')
+        .replace(/ea/g, 'i')
+        .replace(/ai/g, 'êi')
+        .replace(/ay/g, 'êi')
+        .replace(/ou/g, 'ôu')
+        .replace(/ow/g, 'ôu')
+        .replace(/igh/g, 'ái')
+        .replace(/are/g, 'ér')
+        .replace(/ere/g, 'ír')
+        .replace(/tion/g, 'xen')
+        .replace(/sion/g, 'zen')
+        .replace(/ch/g, 'tch')
+        .replace(/sh/g, 'x')
+        .replace(/ph/g, 'f')
+        .replace(/gh/g, '')
+        .replace(/ck/g, 'k')
+        .replace(/ng/g, 'n')
+        .replace(/qu/g, 'ku')
+        .replace(/x/g, 'ks')
+        .replace(/c([ei])/g, 's$1')
+        .replace(/g([ei])/g, 'dj$1')
+        .replace(/a/g, 'é')
+        .replace(/e/g, 'i')
+        .replace(/i/g, 'í')
+        .replace(/o/g, 'ô')
+        .replace(/u/g, 'ú')
+        .replace(/r/g, 'r')
+        .replace(/l/g, 'l')
         .replace(/m/g, 'm')
         .replace(/n/g, 'n')
         .replace(/s/g, 's')
@@ -441,40 +467,37 @@ function generateBrazilianPhonetic(text) {
         .replace(/j/g, 'dj')
         .replace(/z/g, 'z');
 
-    // Ajustes finais
-    phon = phon.replace(/([aeiou])\1/g, '$1'); // remove duplicados
+    phon = phon.replace(/([aeiou])\1/g, '$1');
     return phon;
 }
 
-// Aplicar fonética para todas as palavras e frases
-WORDS.forEach(w => {
-    if (!w.phonetic) w.phonetic = generateBrazilianPhonetic(w.en);
-});
-CLOZE_SENTENCES.forEach(s => {
-    if (!s.phonetic) s.phonetic = generateBrazilianPhonetic(s.en);
-});
+// Aplicar fonética para todos os itens
+WORDS.forEach(w => { if (!w.phonetic) w.phonetic = generateBrazilianPhonetic(w.en); });
+CLOZE_SENTENCES.forEach(s => { if (!s.phonetic) s.phonetic = generateBrazilianPhonetic(s.en); });
+SCRAMBLE_SENTENCES.forEach(s => { if (!s.phonetic) s.phonetic = generateBrazilianPhonetic(s.en); });
 
 // ============================================================
-// 2. CONFIGURAÇÕES
+// 3. CONFIGURAÇÕES
 // ============================================================
 const WORDS_PER_LEVEL = 100;
 const TOTAL_LEVELS = 10;
 const CARDS_PER_SESSION = 12;
 const DOMINATION_THRESHOLD = 4;
 const UNLOCK_THRESHOLD = 0.8;
-const MIX_RATIO = 3; // para misturar vocabulário, contexto e gramática
+const MIX_RATIO = 3;
 
 let currentMode = 'click';
 let currentContent = 'vocabulary';
 
 // ============================================================
-// 3. ESTADO
+// 4. ESTADO
 // ============================================================
 const DEFAULT_STATE = () => ({
     currentLevel: 0,
     progress: {},
     sessionStats: { correct: 0, wrong: 0, total: 0, lastSessionDate: null },
-    config: { mode: 'click', content: 'vocabulary' }
+    config: { mode: 'click', content: 'vocabulary' },
+    theme: 'light'
 });
 
 function loadState() {
@@ -485,6 +508,7 @@ function loadState() {
         if (!parsed.progress) parsed.progress = {};
         if (!parsed.sessionStats) parsed.sessionStats = { correct: 0, wrong: 0, total: 0, lastSessionDate: null };
         if (!parsed.config) parsed.config = { mode: 'click', content: 'vocabulary' };
+        if (!parsed.theme) parsed.theme = 'light';
         return parsed;
     } catch { return DEFAULT_STATE(); }
 }
@@ -494,7 +518,7 @@ function saveState(state) {
 }
 
 // ============================================================
-// 4. FUNÇÕES DE ACESSO
+// 5. FUNÇÕES DE ACESSO
 // ============================================================
 function getLevelWords(levelIndex) {
     const start = levelIndex * WORDS_PER_LEVEL;
@@ -508,6 +532,10 @@ function getClozeQuestions() {
 
 function getGrammarQuestions() {
     return GRAMMAR_QUESTIONS.map((q, idx) => ({ ...q, index: `grammar_${idx}`, type: 'grammar' }));
+}
+
+function getScrambleQuestions() {
+    return SCRAMBLE_SENTENCES.map((s, idx) => ({ ...s, index: `scramble_${idx}`, type: 'scramble' }));
 }
 
 function getItemProgress(state, itemIndex) {
@@ -571,7 +599,7 @@ function shuffle(arr) {
 }
 
 // ============================================================
-// 5. SELEÇÃO DE CARDS (Unificada)
+// 6. SELEÇÃO DE CARDS
 // ============================================================
 function buildSelection(priority, newItems, stable, count) {
     let selected = [];
@@ -596,63 +624,53 @@ function selectCardsForSession(state) {
     const words = getLevelWords(level);
     const cloze = getClozeQuestions();
     const grammar = getGrammarQuestions();
+    const scramble = getScrambleQuestions();
     const now = Date.now();
 
-    // Preparar pools de palavras
-    const wordPriority = [], wordNew = [], wordStable = [];
-    words.forEach(w => {
-        const prog = getItemProgress(state, w.index);
-        if (prog.counter === 0) wordNew.push(w);
-        else if (prog.counter < DOMINATION_THRESHOLD && now >= prog.nextReview) wordPriority.push(w);
-        else wordStable.push(w);
-    });
-    shuffle(wordPriority); shuffle(wordNew); shuffle(wordStable);
+    function preparePool(items) {
+        const priority = [], newItems = [], stable = [];
+        items.forEach(item => {
+            const prog = getItemProgress(state, item.index);
+            if (prog.counter === 0) newItems.push(item);
+            else if (prog.counter < DOMINATION_THRESHOLD && now >= prog.nextReview) priority.push(item);
+            else stable.push(item);
+        });
+        shuffle(priority); shuffle(newItems); shuffle(stable);
+        return { priority, new: newItems, stable };
+    }
 
-    // Preparar pools de frases (Cloze)
-    const clozePriority = [], clozeNew = [], clozeStable = [];
-    cloze.forEach(c => {
-        const prog = getItemProgress(state, c.index);
-        if (prog.counter === 0) clozeNew.push(c);
-        else if (prog.counter < DOMINATION_THRESHOLD && now >= prog.nextReview) clozePriority.push(c);
-        else clozeStable.push(c);
-    });
-    shuffle(clozePriority); shuffle(clozeNew); shuffle(clozeStable);
-
-    // Preparar pools de Gramática
-    const grammarPriority = [], grammarNew = [], grammarStable = [];
-    grammar.forEach(g => {
-        const prog = getItemProgress(state, g.index);
-        if (prog.counter === 0) grammarNew.push(g);
-        else if (prog.counter < DOMINATION_THRESHOLD && now >= prog.nextReview) grammarPriority.push(g);
-        else grammarStable.push(g);
-    });
-    shuffle(grammarPriority); shuffle(grammarNew); shuffle(grammarStable);
+    const wordPool = preparePool(words);
+    const clozePool = preparePool(cloze);
+    const grammarPool = preparePool(grammar);
+    const scramblePool = preparePool(scramble);
 
     let selected = [];
     const totalSlots = CARDS_PER_SESSION;
 
     if (currentContent === 'vocabulary') {
-        selected = buildSelection(wordPriority, wordNew, wordStable, totalSlots);
+        selected = buildSelection(wordPool.priority, wordPool.new, wordPool.stable, totalSlots);
     } else if (currentContent === 'cloze') {
-        selected = buildSelection(clozePriority, clozeNew, clozeStable, totalSlots);
+        selected = buildSelection(clozePool.priority, clozePool.new, clozePool.stable, totalSlots);
     } else if (currentContent === 'grammar') {
-        selected = buildSelection(grammarPriority, grammarNew, grammarStable, totalSlots);
-    } else { // mixed: distribui igualmente entre os três tipos (4 de cada)
-        const perType = Math.floor(totalSlots / 3);
-        const rest = totalSlots - (perType * 3);
-        
-        let part1 = buildSelection(wordPriority, wordNew, wordStable, perType + (rest > 0 ? 1 : 0));
-        let part2 = buildSelection(clozePriority, clozeNew, clozeStable, perType + (rest > 1 ? 1 : 0));
-        let part3 = buildSelection(grammarPriority, grammarNew, grammarStable, perType);
-        
-        selected = [...part1, ...part2, ...part3];
+        selected = buildSelection(grammarPool.priority, grammarPool.new, grammarPool.stable, totalSlots);
+    } else if (currentContent === 'scramble') {
+        selected = buildSelection(scramblePool.priority, scramblePool.new, scramblePool.stable, totalSlots);
+    } else { // mixed
+        const perType = Math.floor(totalSlots / 4);
+        const rest = totalSlots - (perType * 4);
+        let parts = [];
+        parts.push(buildSelection(wordPool.priority, wordPool.new, wordPool.stable, perType + (rest > 0 ? 1 : 0)));
+        parts.push(buildSelection(clozePool.priority, clozePool.new, clozePool.stable, perType + (rest > 1 ? 1 : 0)));
+        parts.push(buildSelection(grammarPool.priority, grammarPool.new, grammarPool.stable, perType + (rest > 2 ? 1 : 0)));
+        parts.push(buildSelection(scramblePool.priority, scramblePool.new, scramblePool.stable, perType));
+        selected = parts.flat();
         shuffle(selected);
     }
     return selected;
 }
 
 // ============================================================
-// 6. UI
+// 7. UI
 // ============================================================
 let state = loadState();
 let currentSession = [];
@@ -663,12 +681,25 @@ let sessionStartTime = 0;
 let timerInterval = null;
 let isAnswering = false;
 let currentCardType = 'word';
+let isFeedbackShowing = false;
+
+// Aplicar tema
+if (state.theme === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('themeToggle').textContent = '☀️';
+} else {
+    document.body.classList.remove('dark');
+    document.getElementById('themeToggle').textContent = '🌙';
+}
 
 if (state.config) {
     currentMode = state.config.mode || 'click';
     currentContent = state.config.content || 'vocabulary';
 }
 
+// ============================================================
+// 8. RENDERIZAÇÃO
+// ============================================================
 function renderDashboard() {
     const level = state.currentLevel;
     const dom = getLevelDominance(state, level);
@@ -736,6 +767,7 @@ function startSession() {
     sessionWrong = 0;
     sessionStartTime = Date.now();
     isAnswering = false;
+    isFeedbackShowing = false;
 
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(() => {
@@ -755,23 +787,29 @@ function renderCard() {
 
     const card = currentSession[sessionIndex];
     currentCardType = card.type || 'word';
+    isFeedbackShowing = false;
     document.getElementById('cardCounter').textContent = `Card ${sessionIndex + 1} / ${currentSession.length}`;
     document.getElementById('feedbackOverlay').classList.remove('show');
     document.getElementById('feedbackJustification').style.display = 'none';
 
-    // --- Exibir texto principal ---
-    document.getElementById('wordDisplay').textContent = card.en;
+    document.getElementById('scrambleArea').style.display = 'none';
+    document.getElementById('optionsContainer').style.display = 'none';
+    document.getElementById('typeArea').style.display = 'none';
 
-    // --- Exibir fonética (sempre que disponível) ---
+    if (currentCardType === 'scramble') {
+        document.getElementById('wordDisplay').textContent = '🧩 Monte a frase:';
+    } else {
+        document.getElementById('wordDisplay').textContent = card.en;
+    }
+
     const phoneticEl = document.getElementById('phoneticDisplay');
-    if (card.phonetic) {
+    if (card.phonetic && currentCardType !== 'scramble') {
         phoneticEl.textContent = `🔊 ${card.phonetic}`;
         phoneticEl.style.display = 'block';
     } else {
         phoneticEl.style.display = 'none';
     }
 
-    // --- Exibir tradução (apenas para Cloze) ---
     const translationEl = document.getElementById('translationDisplay');
     if (currentCardType === 'cloze' && card.pt) {
         translationEl.textContent = `📖 ${card.pt}`;
@@ -780,10 +818,58 @@ function renderCard() {
         translationEl.style.display = 'none';
     }
 
-    // --- Modo de resposta ---
+    if (currentCardType === 'scramble') {
+        document.getElementById('scrambleArea').style.display = 'block';
+        renderScramble(card);
+        return;
+    }
+
     const isTypeMode = (currentMode === 'type');
-    document.getElementById('optionsContainer').style.display = isTypeMode ? 'none' : 'flex';
+    document.getElementById('optionsContainer').style.display = 'flex';
     document.getElementById('typeArea').style.display = isTypeMode ? 'flex' : 'none';
+
+    const isCloze = (card.type === 'cloze');
+    const isGrammar = (card.type === 'grammar');
+    let correctAnswer, options = [], pool;
+
+    if (isGrammar) {
+        correctAnswer = card.correct;
+        options = [...card.options];
+    } else if (isCloze) {
+        correctAnswer = card.answer;
+        pool = WORDS.filter(w => w.en !== correctAnswer && w.en !== card.en);
+        shuffle(pool);
+        options = [correctAnswer];
+        for (let i = 0; i < 3 && i < pool.length; i++) options.push(pool[i].en);
+    } else {
+        correctAnswer = card.pt;
+        pool = WORDS.filter(w => w.pt !== correctAnswer && w.en !== card.en);
+        shuffle(pool);
+        options = [correctAnswer];
+        for (let i = 0; i < 3 && i < pool.length; i++) options.push(pool[i].pt);
+    }
+
+    options = [...new Set(options)];
+    while (options.length < 4) options.push('---');
+    shuffle(options);
+
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+    options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt;
+        btn.dataset.correct = (opt === correctAnswer) ? 'true' : 'false';
+        btn.addEventListener('click', () => {
+            if (isTypeMode) {
+                document.getElementById('typeInput').value = opt;
+                document.getElementById('typeInput').focus();
+            } else {
+                handleClickAnswer(btn, correctAnswer, card.justification || null);
+            }
+        });
+        container.appendChild(btn);
+    });
 
     if (isTypeMode) {
         const input = document.getElementById('typeInput');
@@ -793,57 +879,122 @@ function renderCard() {
         document.getElementById('typeSubmit').disabled = false;
         const newSubmit = document.getElementById('typeSubmit').cloneNode(true);
         document.getElementById('typeSubmit').replaceWith(newSubmit);
-        newSubmit.addEventListener('click', () => handleTypeAnswer());
+        newSubmit.addEventListener('click', () => handleTypeAnswer(correctAnswer, card));
         input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') handleTypeAnswer();
+            if (e.key === 'Enter') handleTypeAnswer(correctAnswer, card);
         });
-        newSubmit.dataset.answer = card.answer || card.pt;
-        newSubmit.dataset.cardIndex = sessionIndex;
-    } else {
-        // Modo Clique: Gerar opções
-        const isCloze = (card.type === 'cloze');
-        const isGrammar = (card.type === 'grammar');
-        let correctAnswer, options = [], pool;
-
-        if (isGrammar) {
-            // Gramática: as opções já estão no objeto
-            correctAnswer = card.correct;
-            options = [...card.options];
-        } else if (isCloze) {
-            correctAnswer = card.answer; // Palavra em inglês
-            pool = WORDS.filter(w => w.en !== correctAnswer && w.en !== card.en);
-            shuffle(pool);
-            options.push(correctAnswer);
-            for (let i = 0; i < 3 && i < pool.length; i++) options.push(pool[i].en);
-        } else {
-            // Vocabulário padrão
-            correctAnswer = card.pt;
-            pool = WORDS.filter(w => w.pt !== correctAnswer && w.en !== card.en);
-            shuffle(pool);
-            options.push(correctAnswer);
-            for (let i = 0; i < 3 && i < pool.length; i++) options.push(pool[i].pt);
-        }
-
-        // Remover duplicatas e garantir 4 opções
-        options = [...new Set(options)];
-        while (options.length < 4) options.push('---');
-        shuffle(options);
-
-        const container = document.getElementById('optionsContainer');
-        container.innerHTML = '';
-        options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'option-btn';
-            btn.textContent = opt;
-            btn.dataset.correct = (opt === correctAnswer) ? 'true' : 'false';
-            btn.addEventListener('click', () => handleClickAnswer(btn, correctAnswer, card.justification || null));
-            container.appendChild(btn);
-        });
+        newSubmit.dataset.answer = correctAnswer;
     }
 }
 
+// ============================================================
+// 9. LÓGICA DE SCRAMBLE
+// ============================================================
+let scrambleSelected = [];
+let scrambleCorrect = [];
+
+function renderScramble(card) {
+    const words = card.words;
+    scrambleCorrect = words.slice();
+    let shuffled = words.slice();
+    do { shuffle(shuffled); } while (shuffled.join('') === words.join('') && words.length > 1);
+    scrambleSelected = [];
+
+    const optionsContainer = document.getElementById('scrambleOptions');
+    const buildContainer = document.getElementById('scrambleBuild');
+    const feedbackEl = document.getElementById('scrambleFeedback');
+
+    optionsContainer.innerHTML = '';
+    shuffled.forEach((word, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'word-btn';
+        btn.textContent = word;
+        btn.dataset.index = idx;
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('used')) return;
+            btn.classList.add('used');
+            scrambleSelected.push(word);
+            renderScrambleBuild();
+        });
+        optionsContainer.appendChild(btn);
+    });
+
+    renderScrambleBuild();
+
+    document.getElementById('scrambleClear').onclick = () => {
+        scrambleSelected = [];
+        document.querySelectorAll('.word-btn').forEach(b => b.classList.remove('used'));
+        renderScrambleBuild();
+        feedbackEl.style.display = 'none';
+    };
+
+    document.getElementById('scrambleCheck').onclick = () => {
+        const userPhrase = scrambleSelected.join(' ');
+        const correctPhrase = scrambleCorrect.join(' ');
+        if (userPhrase === correctPhrase) {
+            feedbackEl.textContent = '✅ Correto!';
+            feedbackEl.style.color = '#10B981';
+            feedbackEl.style.display = 'block';
+            sessionCorrect++;
+            const prog = getItemProgress(state, card.index);
+            const newCounter = Math.min(prog.counter + 1, 5);
+            updateItemProgress(state, card.index, newCounter);
+            saveState(state);
+            setTimeout(() => {
+                sessionIndex++;
+                renderCard();
+            }, 1500);
+        } else {
+            feedbackEl.innerHTML = `❌ Errado! A frase correta é: <strong>"${correctPhrase}"</strong>`;
+            feedbackEl.style.color = '#EF4444';
+            feedbackEl.style.display = 'block';
+            sessionWrong++;
+            updateItemProgress(state, card.index, 0);
+            saveState(state);
+            document.querySelectorAll('.word-btn').forEach(b => b.style.pointerEvents = 'none');
+            document.getElementById('scrambleClear').style.pointerEvents = 'none';
+            document.getElementById('scrambleCheck').style.pointerEvents = 'none';
+            setTimeout(() => {
+                sessionIndex++;
+                renderCard();
+            }, 2500);
+        }
+    };
+}
+
+function renderScrambleBuild() {
+    const buildContainer = document.getElementById('scrambleBuild');
+    buildContainer.innerHTML = '';
+    scrambleSelected.forEach((word, idx) => {
+        const span = document.createElement('span');
+        span.className = 'word-placed';
+        span.textContent = word;
+        span.addEventListener('click', () => {
+            scrambleSelected.splice(idx, 1);
+            const options = document.querySelectorAll('.word-btn');
+            options.forEach(btn => {
+                if (btn.textContent === word && btn.classList.contains('used')) {
+                    btn.classList.remove('used');
+                }
+            });
+            renderScrambleBuild();
+        });
+        buildContainer.appendChild(span);
+    });
+    if (scrambleSelected.length === 0) {
+        const placeholder = document.createElement('span');
+        placeholder.textContent = 'Clique nas palavras abaixo para montar a frase...';
+        placeholder.style.color = 'var(--text-muted)';
+        placeholder.style.fontSize = '0.9rem';
+        buildContainer.appendChild(placeholder);
+    }
+}
+
+// ============================================================
+// 10. RESPOSTAS (Clique e Digitação)
+// ============================================================
 function handleClickAnswer(clickedBtn, correctAnswer, justification) {
-    if (isAnswering) return;
+    if (isAnswering || isFeedbackShowing) return;
     isAnswering = true;
 
     const allBtns = document.querySelectorAll('.option-btn');
@@ -867,64 +1018,53 @@ function handleClickAnswer(clickedBtn, correctAnswer, justification) {
         });
         sessionWrong++;
         updateItemProgress(state, itemIndex, 0);
-        // Se for gramática, exibe a justificativa
         if (card.type === 'grammar' && card.justification) {
             showFeedback(false, card.justification);
         } else {
             showFeedback(false, null);
         }
     }
-
     saveState(state);
-
-    setTimeout(() => {
-        sessionIndex++;
-        isAnswering = false;
-        renderCard();
-    }, 2000); // um pouco mais de tempo para ler a justificativa
 }
 
-function handleTypeAnswer() {
-    if (isAnswering) return;
+function handleTypeAnswer(correctAnswer, card) {
+    if (isAnswering || isFeedbackShowing) return;
     const input = document.getElementById('typeInput');
-    const submitBtn = document.getElementById('typeSubmit');
-    if (!input || input.disabled) return;
-
+    if (input.disabled) return;
     const userAnswer = input.value.trim().toLowerCase();
     if (!userAnswer) return;
 
     isAnswering = true;
     input.disabled = true;
-    submitBtn.disabled = true;
+    document.getElementById('typeSubmit').disabled = true;
 
-    const card = currentSession[sessionIndex];
-    const correctAnswer = (card.answer || card.pt).toLowerCase();
-    const isCorrect = (userAnswer === correctAnswer);
+    const isCorrect = (userAnswer === correctAnswer.toLowerCase());
+    const itemIndex = card.index;
 
     if (isCorrect) {
         sessionCorrect++;
-        const prog = getItemProgress(state, card.index);
+        const prog = getItemProgress(state, itemIndex);
         const newCounter = Math.min(prog.counter + 1, 5);
-        updateItemProgress(state, card.index, newCounter);
+        updateItemProgress(state, itemIndex, newCounter);
         showFeedback(true, null);
     } else {
         sessionWrong++;
-        updateItemProgress(state, card.index, 0);
+        updateItemProgress(state, itemIndex, 0);
         input.value = correctAnswer;
         input.style.borderColor = '#EF4444';
         setTimeout(() => { input.style.borderColor = ''; }, 2000);
-        showFeedback(false, null);
+        if (card.type === 'grammar' && card.justification) {
+            showFeedback(false, card.justification);
+        } else {
+            showFeedback(false, null);
+        }
     }
-
     saveState(state);
-
-    setTimeout(() => {
-        sessionIndex++;
-        isAnswering = false;
-        renderCard();
-    }, 1500);
 }
 
+// ============================================================
+// 11. FEEDBACK COM BOTÃO OK
+// ============================================================
 function showFeedback(isCorrect, justification) {
     const overlay = document.getElementById('feedbackOverlay');
     document.getElementById('feedbackIcon').textContent = isCorrect ? '✅' : '❌';
@@ -938,8 +1078,23 @@ function showFeedback(isCorrect, justification) {
         justEl.style.display = 'none';
     }
     overlay.classList.add('show');
+    isFeedbackShowing = true;
+
+    const okBtn = document.getElementById('feedbackOkBtn');
+    const newOkBtn = okBtn.cloneNode(true);
+    okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+    newOkBtn.addEventListener('click', () => {
+        overlay.classList.remove('show');
+        isFeedbackShowing = false;
+        sessionIndex++;
+        isAnswering = false;
+        renderCard();
+    });
 }
 
+// ============================================================
+// 12. FIM DE SESSÃO
+// ============================================================
 function endSession() {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -967,7 +1122,7 @@ function showScreen(screenId) {
 }
 
 // ============================================================
-// 7. CONFIGURAÇÕES
+// 13. CONFIGURAÇÕES E TEMAS
 // ============================================================
 document.querySelectorAll('#modeToggle .config-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -989,8 +1144,15 @@ document.querySelectorAll('#contentToggle .config-btn').forEach(btn => {
     });
 });
 
+document.getElementById('themeToggle').addEventListener('click', () => {
+    const isDark = document.body.classList.toggle('dark');
+    state.theme = isDark ? 'dark' : 'light';
+    saveState(state);
+    document.getElementById('themeToggle').textContent = isDark ? '☀️' : '🌙';
+});
+
 // ============================================================
-// 8. EVENTOS
+// 14. EVENTOS PRINCIPAIS
 // ============================================================
 document.getElementById('startSessionBtn').addEventListener('click', startSession);
 document.getElementById('quitSessionBtn').addEventListener('click', () => {
