@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>1000 Words · Flashcards + Grammar</title>
+    <title>1000 Words+ · Grammar · Scramble</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,10 +12,13 @@
         <div class="container">
             <header>
                 <h1>📚 1000 Words+</h1>
-                <span class="level-badge" id="levelBadge">Nível A</span>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span class="level-badge" id="levelBadge">Nível A</span>
+                    <button id="themeToggle" class="theme-btn" title="Alternar tema">🌙</button>
+                </div>
             </header>
 
-            <!-- Configurações rápidas -->
+            <!-- Configurações -->
             <div class="config-panel">
                 <div class="config-group">
                     <span class="config-label">Resposta:</span>
@@ -30,6 +33,7 @@
                         <button class="config-btn active" data-content="vocabulary">Vocabulário</button>
                         <button class="config-btn" data-content="cloze">Contexto</button>
                         <button class="config-btn" data-content="grammar">Gramática</button>
+                        <button class="config-btn" data-content="scramble">Monte a Frase</button>
                         <button class="config-btn" data-content="mixed">Misto</button>
                     </div>
                 </div>
@@ -68,7 +72,7 @@
         </div>
     </div>
 
-    <!-- SESSÃO DE FLASHCARDS -->
+    <!-- SESSÃO -->
     <div id="session" class="screen">
         <div class="container">
             <div class="session-header">
@@ -79,26 +83,40 @@
             <div class="flashcard" id="flashcard">
                 <div class="word-display" id="wordDisplay">hello</div>
                 
-                <!-- Nova área para fonética e tradução -->
+                <!-- Extra: fonética e tradução -->
                 <div id="extraInfo" class="extra-info">
-                    <div id="phoneticDisplay" style="display: none; font-size: 1rem; color: #64748B; margin-bottom: 10px;"></div>
-                    <div id="translationDisplay" style="display: none; font-size: 1rem; color: #475569; margin-bottom: 16px;"></div>
+                    <div id="phoneticDisplay" style="display: none; font-size: 1rem; color: var(--text-secondary); margin-bottom: 10px;"></div>
+                    <div id="translationDisplay" style="display: none; font-size: 1rem; color: var(--text-muted); margin-bottom: 16px;"></div>
                 </div>
 
-                <!-- Área para múltipla escolha -->
+                <!-- Área de Scramble (montar frase) -->
+                <div id="scrambleArea" style="display: none; margin-bottom: 16px;">
+                    <div id="scrambleOptions" class="scramble-options" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 12px;"></div>
+                    <div id="scrambleBuild" class="scramble-build" style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 40px; padding: 8px; background: var(--bg-card); border-radius: 12px; border: 2px dashed var(--border-color);"></div>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 12px;">
+                        <button class="btn-secondary btn-small" id="scrambleClear">Limpar</button>
+                        <button class="btn-primary btn-small" id="scrambleCheck">Verificar</button>
+                    </div>
+                    <div id="scrambleFeedback" style="margin-top: 8px; text-align: center; font-weight: 600; display: none;"></div>
+                </div>
+
+                <!-- Área de múltipla escolha (usada em todos os modos exceto scramble) -->
                 <div class="options-grid" id="optionsContainer"></div>
                 
-                <!-- Área para digitação -->
+                <!-- Área de digitação (modo type) -->
                 <div class="type-area" id="typeArea" style="display: none;">
                     <input type="text" id="typeInput" placeholder="Digite a resposta..." autocomplete="off">
                     <button class="btn-primary btn-small" id="typeSubmit">Confirmar</button>
                 </div>
 
-                <!-- Feedback normal (acerto/erro) -->
+                <!-- Feedback Overlay com botão OK -->
                 <div class="feedback-overlay" id="feedbackOverlay">
-                    <span id="feedbackIcon">✅</span>
-                    <span id="feedbackText">Correto!</span>
-                    <span id="feedbackJustification" style="font-size: 0.8rem; font-weight: 400; display: none; margin-top: 4px;"></span>
+                    <div>
+                        <span id="feedbackIcon">✅</span>
+                        <span id="feedbackText">Correto!</span>
+                    </div>
+                    <div id="feedbackJustification" style="font-size: 0.85rem; font-weight: 400; color: #CBD5E1; display: none; margin-top: 4px;"></div>
+                    <button class="btn-primary btn-small" id="feedbackOkBtn" style="margin-top: 12px; padding: 8px 24px; width: auto;">OK</button>
                 </div>
             </div>
 
@@ -106,7 +124,7 @@
         </div>
     </div>
 
-    <!-- RESUMO PÓS-SESSÃO -->
+    <!-- RESUMO -->
     <div id="sessionEnd" class="screen">
         <div class="container end-container">
             <div class="end-icon" id="endIcon">🏆</div>
