@@ -29,6 +29,7 @@
                     <div class="btn-group" id="contentToggle">
                         <button class="config-btn active" data-content="vocabulary">Vocabulário</button>
                         <button class="config-btn" data-content="cloze">Contexto</button>
+                        <button class="config-btn" data-content="grammar">Gramática</button>
                         <button class="config-btn" data-content="mixed">Misto</button>
                     </div>
                 </div>
@@ -77,16 +78,27 @@
 
             <div class="flashcard" id="flashcard">
                 <div class="word-display" id="wordDisplay">hello</div>
+                
+                <!-- Nova área para fonética e tradução -->
+                <div id="extraInfo" class="extra-info">
+                    <div id="phoneticDisplay" style="display: none; font-size: 1rem; color: #64748B; margin-bottom: 10px;"></div>
+                    <div id="translationDisplay" style="display: none; font-size: 1rem; color: #475569; margin-bottom: 16px;"></div>
+                </div>
+
                 <!-- Área para múltipla escolha -->
                 <div class="options-grid" id="optionsContainer"></div>
+                
                 <!-- Área para digitação -->
                 <div class="type-area" id="typeArea" style="display: none;">
                     <input type="text" id="typeInput" placeholder="Digite a resposta..." autocomplete="off">
                     <button class="btn-primary btn-small" id="typeSubmit">Confirmar</button>
                 </div>
+
+                <!-- Feedback normal (acerto/erro) -->
                 <div class="feedback-overlay" id="feedbackOverlay">
                     <span id="feedbackIcon">✅</span>
                     <span id="feedbackText">Correto!</span>
+                    <span id="feedbackJustification" style="font-size: 0.8rem; font-weight: 400; display: none; margin-top: 4px;"></span>
                 </div>
             </div>
 
